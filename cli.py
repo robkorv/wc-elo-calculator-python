@@ -100,6 +100,14 @@ GROUPS = {
         ["JOR", "ARG"],
         ["ALG", "AUT"],
     ],
+    "K": [
+        ["POR", "COD"],
+        ["OEZ", "COL"],
+        ["POR", "OEZ"],
+        ["COL", "COD"],
+        ["COD", "OEZ"],
+        ["COL", "POR"],
+    ],
 }
 
 
@@ -168,6 +176,7 @@ def main(args):
     fifa_code_to_alpha_2["SAU"] = "SA"
     fifa_code_to_alpha_2["URY"] = "UY"
     fifa_code_to_alpha_2["IRK"] = "IQ"
+    fifa_code_to_alpha_2["OEZ"] = "UZ"
     
     # codes that are different on eloratings.net
     fifa_code_to_alpha_2["SCO"] = "SQ"
