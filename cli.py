@@ -59,6 +59,14 @@ GROUPS = {
         ["CUR", "CIV"],
         ["ECU", "GER"],
     ],
+    "F": [
+        ["NED", "JAP"],
+        ["SWE", "TUN"],
+        ["NED", "SWE"],
+        ["TUN", "JAP"],
+        ["TUN", "NED"],
+        ["JAP", "SWE"],
+    ],
 }
 
 
@@ -123,6 +131,7 @@ def main(args):
     # codes that are different on scorito.com
     fifa_code_to_alpha_2["BOS"] = "BA"
     fifa_code_to_alpha_2["CUR"] = "CW"
+    fifa_code_to_alpha_2["JAP"] = "JP"
     
     # codes that are different on eloratings.net
     fifa_code_to_alpha_2["SCO"] = "SQ"
