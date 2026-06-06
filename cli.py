@@ -2,6 +2,7 @@
 
 import argparse
 import csv
+import itertools
 import json
 import logging
 import pathlib
@@ -118,6 +119,14 @@ GROUPS = {
     ],
 }
 
+TEAMS = sorted(
+    set(
+        itertools.chain.from_iterable(
+            [match for matches in GROUPS.values() for match in matches]
+        )
+    )
+)
+
 
 def load_elo_per_team():
 
@@ -135,7 +144,9 @@ def load_elo_per_team():
 
 
 def load_fifa_code_to_alpha_2():
-    fifa_member_associations = working_dir.joinpath("fifa-member-associations-fixed.csv")
+    fifa_member_associations = working_dir.joinpath(
+        "fifa-member-associations-fixed.csv"
+    )
     if not fifa_member_associations.is_file():
         logger.info(
             f"Downloading FIFA member associations file: {fifa_member_associations}"
@@ -147,7 +158,9 @@ def load_fifa_code_to_alpha_2():
             fifa_member_associations.write_bytes(r.content)
     with fifa_member_associations.open() as f:
         reader = csv.DictReader(f, dialect="excel")
-        for row in filter(lambda x: x["Country.Iso3166.Alpha2Code"] in elo_per_team, reader):
+        for row in filter(
+            lambda x: x["Country.Iso3166.Alpha2Code"] in elo_per_team, reader
+        ):
             fifa_code_to_alpha_2[row["FIFA.Code"]] = row["Country.Iso3166.Alpha2Code"]
     logger.info(
         f"FIFA member associations loaded from file: {fifa_member_associations}"
@@ -166,7 +179,9 @@ def load_fifa_code_to_name():
     ):
         alpha_2_to_name[item["alpha_2"]] = item["name"]
 
-    for fifa_code, alpha_2 in filter(lambda x: x[1] in alpha_2_to_name, fifa_code_to_alpha_2.items()):
+    for fifa_code, alpha_2 in filter(
+        lambda x: x[1] in alpha_2_to_name, fifa_code_to_alpha_2.items()
+    ):
         fifa_code_to_name[fifa_code] = alpha_2_to_name[alpha_2]
     logger.info("FIFA code to name mapping loaded from ISO 3166-1 data")
 
@@ -185,7 +200,7 @@ def main(args):
     fifa_code_to_alpha_2["URY"] = "UY"
     fifa_code_to_alpha_2["IRK"] = "IQ"
     fifa_code_to_alpha_2["OEZ"] = "UZ"
-    
+
     # codes that are different on eloratings.net
     fifa_code_to_alpha_2["SCO"] = "SQ"
     fifa_code_to_alpha_2["ENG"] = "EN"
@@ -244,7 +259,12 @@ if __name__ == "__main__":
     logger.setLevel(logging.INFO)
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "country1", type=str, help="First country", default=argparse.SUPPRESS, nargs="?"
+        "country1",
+        type=str,
+        help="First country",
+        default=argparse.SUPPRESS,
+        nargs="?",
+        choices=[x.lower() for x in TEAMS],
     )
     parser.add_argument(
         "country2",
@@ -252,6 +272,7 @@ if __name__ == "__main__":
         help="Second country",
         default=argparse.SUPPRESS,
         nargs="?",
+        choices=[x.lower() for x in TEAMS],
     )
     parser.add_argument(
         "-g", "--group", type=str, help="Group", choices=[x.lower() for x in GROUPS]
