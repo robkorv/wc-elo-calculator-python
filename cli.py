@@ -67,6 +67,14 @@ GROUPS = {
         ["TUN", "NED"],
         ["JAP", "SWE"],
     ],
+    "G": [
+        ["BEL", "EGY"],
+        ["IRN", "NZL"],
+        ["BEL", "IRN"],
+        ["NZL", "EGY"],
+        ["EGY", "IRN"],
+        ["NZL", "BEL"],
+    ],
 }
 
 
