@@ -43,6 +43,22 @@ GROUPS = {
         ["MAR", "HAI"],
         ["SCO", "BRA"],
     ],
+    "D": [
+        ["USA", "PAR"],
+        ["AUS", "TUR"],
+        ["USA", "AUS"],
+        ["TUR", "PAR"],
+        ["PAR", "AUS"],
+        ["TUR", "USA"],
+    ],
+    "E": [
+        ["GER", "CUR"],
+        ["CIV", "ECU"],
+        ["GER", "CIV"],
+        ["ECU", "CUR"],
+        ["CUR", "CIV"],
+        ["ECU", "GER"],
+    ],
 }
 
 
@@ -106,6 +122,8 @@ def main(args):
 
     # codes that are different on scorito.com
     fifa_code_to_alpha_2["BOS"] = "BA"
+    fifa_code_to_alpha_2["CUR"] = "CW"
+    
     # codes that are different on eloratings.net
     fifa_code_to_alpha_2["SCO"] = "SQ"
 
