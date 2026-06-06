@@ -19,6 +19,7 @@ fifa_code_to_name = {}
 
 
 def load_elo_per_team():
+
     elo_tsv = working_dir.joinpath("2026_World_Cup.tsv")
     if not elo_tsv.is_file():
         logger.info(f"Downloading Elo ratings file: {elo_tsv}")
@@ -45,7 +46,7 @@ def load_fifa_code_to_alpha_2():
             fifa_member_associations.write_bytes(r.content)
     with fifa_member_associations.open() as f:
         reader = csv.DictReader(f, dialect="excel")
-        for row in filter(lambda x: x["Country.Iso3166.Alpha2Code"] in fifa_code_to_alpha_2, reader):
+        for row in filter(lambda x: x["Country.Iso3166.Alpha2Code"] in elo_per_team, reader):
             fifa_code_to_alpha_2[row["FIFA.Code"]] = row["Country.Iso3166.Alpha2Code"]
     logger.info(
         f"FIFA member associations loaded from file: {fifa_member_associations}"
@@ -72,8 +73,8 @@ def load_fifa_code_to_name():
 def main(args):
     logger.info(f"{working_dir = }")
 
-    load_fifa_code_to_alpha_2()
     load_elo_per_team()
+    load_fifa_code_to_alpha_2()
     load_fifa_code_to_name()
 
     highest_elo = max(elo_per_team.values())
@@ -97,11 +98,11 @@ def main(args):
         return {
             "country1": country1,
             "country2": country2,
+            "winner": get_winner(goals1, goals2, country1, country2),
             "goals1": goals1,
             "goals2": goals2,
             "matchwinratio1": cupwinratio1 / (cupwinratio1 + cupwinratio2),
             "matchwinratio2": cupwinratio2 / (cupwinratio1 + cupwinratio2),
-            "winner": get_winner(goals1, goals2, country1, country2),
         }
 
     def get_winner(goals1, goals2, country1, country2):
@@ -112,14 +113,38 @@ def main(args):
         else:
             return country1
 
-    print(calculate_win_probability(args.country1.upper(), args.country2.upper()))
+    groups = {
+        "A": [
+            ["MEX", "RSA"],
+            ["KOR", "CZE"],
+            ["CZE", "RSA"],
+            ["MEX", "KOR"],
+            ["RSA", "KOR"],
+            ["CZE", "MEX"],
+        ]
+    }
+
+    if args.group:
+        for match in groups[args.group.upper()]:
+            print(calculate_win_probability(match[0], match[1]))
+    else:
+        print(calculate_win_probability(args.country1.upper(), args.country2.upper()))
 
 
 if __name__ == "__main__":
     logger.addHandler(logging.StreamHandler())
     logger.setLevel(logging.INFO)
     parser = argparse.ArgumentParser()
-    parser.add_argument("country1", type=str, help="First country")
-    parser.add_argument("country2", type=str, help="Second country")
+    parser.add_argument(
+        "country1", type=str, help="First country", default=argparse.SUPPRESS, nargs="?"
+    )
+    parser.add_argument(
+        "country2",
+        type=str,
+        help="Second country",
+        default=argparse.SUPPRESS,
+        nargs="?",
+    )
+    parser.add_argument("-g", "--group", type=str, help="Group")
     args = parser.parse_args()
     main(args)

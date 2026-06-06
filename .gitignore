@@ -220,3 +220,6 @@ __marimo__/
 # Datasets
 2026_World_Cup.tsv
 fifa-member-associations.csv
+
+# merge conflict files
+*.orig
