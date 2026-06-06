@@ -75,6 +75,14 @@ GROUPS = {
         ["EGY", "IRN"],
         ["NZL", "BEL"],
     ],
+    "H": [
+        ["ESP", "CPV"],
+        ["SAU", "URY"],
+        ["ESP", "SAU"],
+        ["URY", "CPV"],
+        ["URY", "ESP"],
+        ["CPV", "SAU"],
+    ],
 }
 
 
@@ -140,6 +148,8 @@ def main(args):
     fifa_code_to_alpha_2["BOS"] = "BA"
     fifa_code_to_alpha_2["CUR"] = "CW"
     fifa_code_to_alpha_2["JAP"] = "JP"
+    fifa_code_to_alpha_2["SAU"] = "SA"
+    fifa_code_to_alpha_2["URY"] = "UY"
     
     # codes that are different on eloratings.net
     fifa_code_to_alpha_2["SCO"] = "SQ"
