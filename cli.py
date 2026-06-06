@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
-import json
-import pathlib
-import requests
-import logging
-import csv
 import argparse
+import csv
+import json
+import logging
+import pathlib
+
+import requests
 
 file_path = pathlib.Path(__file__)
 working_dir = file_path.parent
@@ -90,6 +91,14 @@ GROUPS = {
         ["NOR", "SEN"],
         ["NOR", "FRA"],
         ["SEN", "IRK"],
+    ],
+    "J": [
+        ["ARG", "ALG"],
+        ["AUT", "JOR"],
+        ["ARG", "AUT"],
+        ["JOR", "ALG"],
+        ["JOR", "ARG"],
+        ["ALG", "AUT"],
     ],
 }
 
