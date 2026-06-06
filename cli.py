@@ -62,7 +62,7 @@ def load_elo_per_team():
 
 
 def load_fifa_code_to_alpha_2():
-    fifa_member_associations = working_dir.joinpath("fifa-member-associations.csv")
+    fifa_member_associations = working_dir.joinpath("fifa-member-associations-fixed.csv")
     if not fifa_member_associations.is_file():
         logger.info(
             f"Downloading FIFA member associations file: {fifa_member_associations}"
@@ -93,7 +93,7 @@ def load_fifa_code_to_name():
     ):
         alpha_2_to_name[item["alpha_2"]] = item["name"]
 
-    for fifa_code, alpha_2 in fifa_code_to_alpha_2.items():
+    for fifa_code, alpha_2 in filter(lambda x: x[1] in alpha_2_to_name, fifa_code_to_alpha_2.items()):
         fifa_code_to_name[fifa_code] = alpha_2_to_name[alpha_2]
     logger.info("FIFA code to name mapping loaded from ISO 3166-1 data")
 
@@ -104,10 +104,15 @@ def main(args):
     load_elo_per_team()
     load_fifa_code_to_alpha_2()
 
-    # codes that are different in the scorito.com app
+    # codes that are different on scorito.com
     fifa_code_to_alpha_2["BOS"] = "BA"
+    # codes that are different on eloratings.net
+    fifa_code_to_alpha_2["SCO"] = "SQ"
 
     load_fifa_code_to_name()
+
+    # let's say these are complicated
+    fifa_code_to_name["SCO"] = "Scotland"
 
     highest_elo = max(elo_per_team.values())
     logger.info(f"Highest Elo rating: {highest_elo}")
