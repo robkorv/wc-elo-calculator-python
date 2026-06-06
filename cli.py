@@ -83,6 +83,14 @@ GROUPS = {
         ["URY", "ESP"],
         ["CPV", "SAU"],
     ],
+    "I": [
+        ["FRA", "SEN"],
+        ["IRK", "NOR"],
+        ["FRA", "IRK"],
+        ["NOR", "SEN"],
+        ["NOR", "FRA"],
+        ["SEN", "IRK"],
+    ],
 }
 
 
@@ -150,6 +158,7 @@ def main(args):
     fifa_code_to_alpha_2["JAP"] = "JP"
     fifa_code_to_alpha_2["SAU"] = "SA"
     fifa_code_to_alpha_2["URY"] = "UY"
+    fifa_code_to_alpha_2["IRK"] = "IQ"
     
     # codes that are different on eloratings.net
     fifa_code_to_alpha_2["SCO"] = "SQ"
