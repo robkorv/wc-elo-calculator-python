@@ -108,6 +108,14 @@ GROUPS = {
         ["COD", "OEZ"],
         ["COL", "POR"],
     ],
+    "L": [
+        ["ENG", "CRO"],
+        ["GHA", "PAN"],
+        ["ENG", "GHA"],
+        ["PAN", "CRO"],
+        ["CRO", "GHA"],
+        ["PAN", "ENG"],
+    ],
 }
 
 
@@ -180,11 +188,13 @@ def main(args):
     
     # codes that are different on eloratings.net
     fifa_code_to_alpha_2["SCO"] = "SQ"
+    fifa_code_to_alpha_2["ENG"] = "EN"
 
     load_fifa_code_to_name()
 
     # let's say these are complicated
     fifa_code_to_name["SCO"] = "Scotland"
+    fifa_code_to_name["ENG"] = "England"
 
     highest_elo = max(elo_per_team.values())
     logger.info(f"Highest Elo rating: {highest_elo}")
