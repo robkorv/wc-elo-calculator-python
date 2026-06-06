@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Datasets
+2026_World_Cup.tsv
+fifa-member-associations.csv
