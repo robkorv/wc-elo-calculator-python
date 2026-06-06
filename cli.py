@@ -18,6 +18,34 @@ fifa_code_to_alpha_2 = {}
 fifa_code_to_name = {}
 
 
+GROUPS = {
+    "A": [
+        ["MEX", "RSA"],
+        ["KOR", "CZE"],
+        ["CZE", "RSA"],
+        ["MEX", "KOR"],
+        ["RSA", "KOR"],
+        ["CZE", "MEX"],
+    ],
+    "B": [
+        ["CAN", "BOS"],
+        ["QAT", "SUI"],
+        ["SUI", "BOS"],
+        ["CAN", "QAT"],
+        ["SUI", "CAN"],
+        ["BOS", "QAT"],
+    ],
+    "C": [
+        ["BRA", "MAR"],
+        ["HAI", "SCO"],
+        ["SCO", "MAR"],
+        ["BRA", "HAI"],
+        ["MAR", "HAI"],
+        ["SCO", "BRA"],
+    ],
+}
+
+
 def load_elo_per_team():
 
     elo_tsv = working_dir.joinpath("2026_World_Cup.tsv")
@@ -75,6 +103,10 @@ def main(args):
 
     load_elo_per_team()
     load_fifa_code_to_alpha_2()
+
+    # codes that are different in the scorito.com app
+    fifa_code_to_alpha_2["BOS"] = "BA"
+
     load_fifa_code_to_name()
 
     highest_elo = max(elo_per_team.values())
@@ -93,8 +125,8 @@ def main(args):
         cupwinratio2 = diff2 / max_diff
         goals1 = round(cupwinratio1 / (cupwinratio1 + cupwinratio2) * avg_goals)
         goals2 = round(cupwinratio2 / (cupwinratio1 + cupwinratio2) * avg_goals)
-        country1 = fifa_code_to_name[country1]
-        country2 = fifa_code_to_name[country2]
+        country1 = f"{fifa_code_to_name[country1]} ({country1})"
+        country2 = f"{fifa_code_to_name[country2]} ({country2})"
         return {
             "country1": country1,
             "country2": country2,
@@ -113,19 +145,8 @@ def main(args):
         else:
             return country1
 
-    groups = {
-        "A": [
-            ["MEX", "RSA"],
-            ["KOR", "CZE"],
-            ["CZE", "RSA"],
-            ["MEX", "KOR"],
-            ["RSA", "KOR"],
-            ["CZE", "MEX"],
-        ]
-    }
-
     if args.group:
-        for match in groups[args.group.upper()]:
+        for match in GROUPS[args.group.upper()]:
             print(calculate_win_probability(match[0], match[1]))
     else:
         print(calculate_win_probability(args.country1.upper(), args.country2.upper()))
@@ -145,6 +166,8 @@ if __name__ == "__main__":
         default=argparse.SUPPRESS,
         nargs="?",
     )
-    parser.add_argument("-g", "--group", type=str, help="Group")
+    parser.add_argument(
+        "-g", "--group", type=str, help="Group", choices=[x.lower() for x in GROUPS]
+    )
     args = parser.parse_args()
     main(args)
