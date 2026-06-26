@@ -211,22 +211,21 @@ def main(args):
     fifa_code_to_name["SCO"] = "Scotland"
     fifa_code_to_name["ENG"] = "England"
 
-    highest_elo = max(elo_per_team.values())
-    logger.info(f"Highest Elo rating: {highest_elo}")
-    lowest_elo = min(elo_per_team.values())
-    logger.info(f"Lowest Elo rating: {lowest_elo}")
-    max_diff = highest_elo - lowest_elo
-    logger.info(f"Max Elo rating difference: {max_diff}")
     avg_goals = 2.69
     logger.info(f"Average goals: {avg_goals}")
 
     def calculate_win_probability(country1, country2):
-        diff1 = elo_per_team[fifa_code_to_alpha_2[country1]] - lowest_elo
-        diff2 = elo_per_team[fifa_code_to_alpha_2[country2]] - lowest_elo
-        cupwinratio1 = diff1 / max_diff
-        cupwinratio2 = diff2 / max_diff
-        goals1 = round(cupwinratio1 / (cupwinratio1 + cupwinratio2) * avg_goals)
-        goals2 = round(cupwinratio2 / (cupwinratio1 + cupwinratio2) * avg_goals)
+        elo1 = elo_per_team[fifa_code_to_alpha_2[country1]]
+        elo2 = elo_per_team[fifa_code_to_alpha_2[country2]]
+        # Standard Elo win probability (logistic curve, 400-point scale)
+        p1 = 1 / (1 + 10 ** ((elo2 - elo1) / 400))
+        p2 = 1 - p1
+        # Draw bias: predict 1-1 when teams are closely matched
+        if abs(p1 - p2) < 0.05:
+            goals1, goals2 = 1, 1
+        else:
+            goals1 = round(p1 * avg_goals)
+            goals2 = round(p2 * avg_goals)
         country1 = f"{fifa_code_to_name[country1]} ({country1})"
         country2 = f"{fifa_code_to_name[country2]} ({country2})"
         return {
@@ -235,8 +234,8 @@ def main(args):
             "winner": get_winner(goals1, goals2, country1, country2),
             "goals1": goals1,
             "goals2": goals2,
-            "matchwinratio1": cupwinratio1 / (cupwinratio1 + cupwinratio2),
-            "matchwinratio2": cupwinratio2 / (cupwinratio1 + cupwinratio2),
+            "matchwinratio1": p1,
+            "matchwinratio2": p2,
         }
 
     def get_winner(goals1, goals2, country1, country2):
