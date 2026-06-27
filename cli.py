@@ -145,7 +145,7 @@ def load_elo_per_team():
 
 def load_fifa_code_to_alpha_2():
     fifa_member_associations = working_dir.joinpath(
-        "fifa-member-associations-fixed.csv"
+        "fifa-member-associations.csv"
     )
     if not fifa_member_associations.is_file():
         logger.info(
